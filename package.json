@@ -49,7 +49,25 @@
       "linebreak-style": [
         "error",
         "windows"
-      ]
+      ],
+      "indent": "off",
+      "no-tabs": "off",
+      "eol-last": "off",
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "no-underscore-dangle": "off",
+      "no-param-reassign": "off",
+      "space-before-function-paren": "off",
+      "operator-linebreak": "off",
+      "max-len": "off",
+      "no-plusplus": "off",
+      "curly": "off",
+      "nonblock-statement-body-position": "off",
+      "quotes": "off",
+      "function-paren-newline": "off",
+      "no-console": "off"
     },
     "overrides": [
       {
