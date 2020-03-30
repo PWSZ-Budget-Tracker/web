@@ -7,24 +7,31 @@
 			<v-divider inset vertical></v-divider>
 			<v-col md="5" justify="end">
 				<v-card justify="center">
-					<v-form acti>
-						<v-row justify="center" align="center">
+					<v-form v-model="valid">
+						<v-row justify="center" align="center" lazy-validation>
 							<div class="my-2">
 								<h1>Budget tracker</h1>
 							</div>
 						</v-row>
 						<v-row justify="center" align="center">
 							<v-col sm="10" md="8">
-								<v-text-field label="Email" v-model="email" :color="emailColor" outlined></v-text-field>
+								<v-text-field
+									label="Email"
+									v-model="email"
+									:rules="[rules.required, rules.email]"
+									color="#9090ee"
+									outlined
+								></v-text-field>
 							</v-col>
 						</v-row>
 						<v-row justify="center">
-							<v-col sm="10" md="8" class="mt-n12">
+							<v-col sm="10" md="8" class="mt-n8">
 								<v-text-field
 									label="Hasło"
 									type="password"
 									v-model="password"
-									:color="passwordColor"
+									:rules="[rules.required, rules.minLenght]"
+									color="#9090ee"
 									outlined
 								></v-text-field>
 								<v-alert
@@ -67,29 +74,20 @@ export default {
 			password: "",
 			email: "",
 			validationAlert: false,
-			valid: false
+			valid: false,
+			rules: {
+				required: (value) => !!value || "Wymagane",
+				minLenght: (v) => v.length >= 8 || "Min 8 znaków",
+				email: (value) => {
+					const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return pattern.test(value) || "Niepoprawny email";
+				}
+			}
 		};
-	},
-	computed: {
-		emailColor() {
-			const re = new RegExp("[^@]+@[^@]+\\.[^@]+");
-			const color = !re.test(this.email.toLowerCase())
-				? "red"
-				: "#9090ee";
-			return color;
-		},
-		passwordColor() {
-			const color = this.password.length < 8 ? "red" : "#9090ee";
-			return color;
-		}
 	},
 	methods: {
 		submitValidate(event) {
-			const re = new RegExp("[^@]+@[^@]+\\.[^@]+");
-			if (
-				this.password.length < 8 ||
-				!re.test(this.email.toLowerCase())
-			) {
+			if (!this.valid) {
 				event.preventDefault();
 				this.validationAlert = "Wprowadź lub popraw dane";
 			}
