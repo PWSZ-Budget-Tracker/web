@@ -17,7 +17,7 @@ export default {
 	name: "App",
 	data() {
 		return {
-			isLogged: false
+			isLogged: true
 		};
 	},
 	created() {

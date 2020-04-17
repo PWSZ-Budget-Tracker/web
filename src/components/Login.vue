@@ -10,7 +10,7 @@
 					<v-form v-model="valid">
 						<v-row justify="center" align="center" lazy-validation>
 							<div class="my-2">
-								<h1>Budget tracker</h1>
+								<h1>Budget Tracker</h1>
 							</div>
 						</v-row>
 						<v-row justify="center" align="center">
@@ -68,6 +68,8 @@
 
 
 <script>
+import rules from "@/components/validation/rules";
+
 export default {
 	data() {
 		return {
@@ -75,14 +77,7 @@ export default {
 			email: "",
 			validationAlert: false,
 			valid: false,
-			rules: {
-				required: (value) => !!value || "Wymagane",
-				minLenght: (v) => v.length >= 8 || "Min 8 znaków",
-				email: (value) => {
-					const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					return pattern.test(value) || "Niepoprawny email";
-				}
-			}
+			rules
 		};
 	},
 	methods: {

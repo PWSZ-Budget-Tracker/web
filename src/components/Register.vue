@@ -6,24 +6,44 @@
 					<v-form v-model="valid">
 						<v-row justify="center" align="center">
 							<div class="my-2 text-center">
-								<h1>Budget tracker</h1>
-								<h3 class="text-default">Tworzenie konta</h3>
+								<h1>Budget Tracker</h1>
+								<h3 class="text-default">tworzenie konta</h3>
 							</div>
 						</v-row>
 						<v-row justify="center" align="center">
 							<v-col sm="10" md="8">
-								<v-text-field label="Email" v-model="email" :rules="[rules.required, rules.email]" color="#9090ee" outlined></v-text-field>
+								<v-text-field
+									label="Email"
+									v-model="email"
+									:rules="[rules.required, rules.email]"
+									color="#9090ee"
+									outlined
+								></v-text-field>
 							</v-col>
 						</v-row>
 						<v-row justify="center">
 							<v-col sm="10" md="8" class="mt-n7">
-								<v-text-field label="Hasło" type="password" v-model="password" :rules="[rules.required, rules.minLenght]" color="#9090ee" outlined></v-text-field>
+								<v-text-field
+									label="Hasło"
+									type="password"
+									v-model="password"
+									:rules="[rules.required, rules.minLenght]"
+									color="#9090ee"
+									outlined
+								></v-text-field>
 							</v-col>
 						</v-row>
 						<v-row justify="center">
 							<v-col sm="10" md="8" class="mt-n7">
-								<v-text-field label="Powtórz hasło" type="password" v-model="repeatPassword" :rules="[rules.required, rules.minLenght, rules.repeatPassword]" color="#9090ee" outlined></v-text-field>
-							<v-alert
+								<v-text-field
+									label="Powtórz hasło"
+									type="password"
+									v-model="repeatPassword"
+									:rules="[rules.required, rules.minLenght, rules.repeatPassword]"
+									color="#9090ee"
+									outlined
+								></v-text-field>
+								<v-alert
 									type="error"
 									:value="validationAlert"
 									dark
@@ -57,6 +77,8 @@
 
 
 <script>
+import rules from "@/components/validation/rules";
+
 export default {
 	data() {
 		return {
@@ -65,15 +87,7 @@ export default {
 			email: "",
 			validationAlert: false,
 			valid: false,
-			rules: {
-				required: (value) => !!value || "Wymagane",
-				minLenght: (v) => v.length >= 8 || "Min 8 znaków",
-				repeatPassword: (value) => value === this.password || "Hasło musi być takie same",
-				email: (value) => {
-					const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					return pattern.test(value) || "Niepoprawny email";
-				}
-			}
+			rules
 		};
 	},
 	methods: {
