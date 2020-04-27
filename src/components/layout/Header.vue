@@ -5,15 +5,16 @@
 				<v-app-bar app color="#3eb4a7" dark>
 					<img alt="Vue logo" src="../../assets/logo.png" width="100" />
 
-					<v-toolbar-title>Budget Tracker</v-toolbar-title>
+					<v-toolbar-title @click="redirect" style="cursor: pointer">Budget Tracker</v-toolbar-title>
 
 					<v-spacer></v-spacer>
-
-					<v-btn icon v-on="on">
-						<v-badge :content="messages" :value="messages" color="#9090ee" overlap>
-							<v-icon>mdi-alarm</v-icon>
-						</v-badge>
-					</v-btn>
+					<template v-slot:activator="{ on }">
+						<v-btn icon v-on="on">
+							<v-badge :content="messages" :value="messages" color="#9090ee" overlap>
+								<v-icon>mdi-alarm</v-icon>
+							</v-badge>
+						</v-btn>
+					</template>
 					<v-menu left bottom>
 						<template v-slot:activator="{ on }">
 							<v-btn icon v-on="on">
@@ -32,3 +33,20 @@
 		</template>
 	</div>
 </template>
+
+<script>
+export default {
+	methods: {
+		redirect() {
+			if (this.$route.path !== "/main") {
+				this.$router.push("/main");
+			}
+		}
+	},
+	data() {
+		return {
+			messages: 0
+		};
+	}
+};
+</script>

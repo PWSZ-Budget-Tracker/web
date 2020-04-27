@@ -1,6 +1,6 @@
 <template>
 	<v-app>
-		<app-header :isLogged="isLogged"></app-header>
+		<app-header v-if="visible" :isLogged="isLogged"></app-header>
 
 		<v-content>
 			<router-view></router-view>
@@ -17,11 +17,15 @@ export default {
 	name: "App",
 	data() {
 		return {
-			isLogged: true
+			isLogged: true,
+			visible: true
 		};
 	},
 	created() {
 		console.log(this.isLogged);
+		if (this.$route.path === "/" || this.$route.path === "/register") {
+			this.visible = false;
+		}
 	},
 	components: {
 		appHeader: Header,
