@@ -45,7 +45,7 @@
 						</v-row>
 						<v-row justify="center" align="center">
 							<div class="my-2">
-								<v-btn type="submit" color="#3eb4a7" dark large @click="submitValidate">Zaloguj</v-btn>
+								<v-btn color="#3eb4a7" dark large @click="submitValidate">Zaloguj</v-btn>
 							</div>
 						</v-row>
 						<v-divider></v-divider>
@@ -68,7 +68,9 @@
 
 
 <script>
+/*eslint-disable*/
 import rules from "@/components/validation/rules";
+import axios from "@/axios";
 
 export default {
 	data() {
@@ -85,6 +87,14 @@ export default {
 			if (!this.valid) {
 				event.preventDefault();
 				this.validationAlert = "Wprowadź lub popraw dane";
+			} else {
+				axios
+					.post("/api/Authentication/Login", {
+						email: this.email,
+						password: this.password
+					})
+					.then(res => {})
+					.catch(err => {});
 			}
 		}
 	}

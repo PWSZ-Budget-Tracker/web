@@ -6,6 +6,7 @@ import Logged from '../views/Logged.vue';
 import Register from '../components/Register.vue';
 import Login from '../components/Login.vue';
 import Table from '../components/Table.vue';
+import Calendar from '../components/Calendar.vue';
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [{
     path: '/income',
     name: 'Income',
     component: Table
+  },
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    component: Calendar
   },
   {
     path: '/register',

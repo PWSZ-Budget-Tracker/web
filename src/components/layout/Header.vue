@@ -8,13 +8,16 @@
 					<v-toolbar-title @click="redirect" style="cursor: pointer">Budget Tracker</v-toolbar-title>
 
 					<v-spacer></v-spacer>
-					<template v-slot:activator="{ on }">
-						<v-btn icon v-on="on">
+					<v-menu :close-on-content-click="false" :nudge-width="200" offset-x>
+						<template v-slot:activator="{ on }">
 							<v-badge :content="messages" :value="messages" color="#9090ee" overlap>
-								<v-icon>mdi-alarm</v-icon>
+								<v-btn v-on="on" icon>
+									<v-icon>mdi-alarm</v-icon>
+								</v-btn>
 							</v-badge>
-						</v-btn>
-					</template>
+						</template>
+						<v-card>powiadomienie</v-card>
+					</v-menu>
 					<v-menu left bottom>
 						<template v-slot:activator="{ on }">
 							<v-btn icon v-on="on">

@@ -44,6 +44,18 @@
 			<template v-slot:item.actions="{ item }">
 				<v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
 				<v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+				<div v-if="$route.path == '/goal'">
+					<v-btn>Wpłać</v-btn>
+					<v-progress-linear
+						:active="true"
+						:background-opacity="0.2"
+						:buffer-value="100"
+						:height="16"
+						:rounded="true"
+						:value="25"
+						color="light-blue"
+					></v-progress-linear>
+				</div>
 			</template>
 		</v-data-table>
 	</div>

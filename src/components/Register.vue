@@ -54,7 +54,7 @@
 						</v-row>
 						<v-row justify="center" align="center">
 							<div class="my-2">
-								<v-btn type="submit" color="#3eb4a7" @click="submitValidate" dark large>Stwórz konto</v-btn>
+								<v-btn color="#3eb4a7" @click="submitValidate" dark large>Stwórz konto</v-btn>
 							</div>
 						</v-row>
 						<v-divider></v-divider>
@@ -63,7 +63,7 @@
 								<p>
 									Masz konto?
 									<router-link to="/">
-										<v-btn text color="#3eb4a7">Zaloguj się</v-btn>
+										<v-btn text color="#3eb4a7">Zaloguj się{{valid}}</v-btn>
 									</router-link>
 								</p>
 							</div>
@@ -72,12 +72,20 @@
 				</v-card>
 			</v-col>
 		</v-row>
+		<div class="text-center ma-2">
+			<v-snackbar v-model="snackbar">
+				{{ text }}
+				<v-btn color="pink" text @click="snackbar = false">Close</v-btn>
+			</v-snackbar>
+		</div>
 	</v-container>
 </template>
 
 
 <script>
+/* eslint-disable */
 import rules from "@/components/validation/rules";
+import axios from "@/axios";
 
 export default {
 	data() {
@@ -87,7 +95,9 @@ export default {
 			email: "",
 			validationAlert: false,
 			valid: false,
-			rules
+			rules,
+			snackbar: false,
+			text: "utworzono konto"
 		};
 	},
 	methods: {
@@ -95,6 +105,20 @@ export default {
 			if (!this.valid) {
 				event.preventDefault();
 				this.validationAlert = "Wprowadź lub popraw dane";
+			} else {
+				const credentials = {
+					email: this.email,
+					password: this.password,
+					passwordConfirmation: this.repeatPassword
+				};
+				axios
+					.post("/api/Authentication/Register", credentials)
+					.then(res => {
+						console.log(res);
+						this.snackbar = true;
+						this.$router.push("/login");
+					})
+					.catch(err => {});
 			}
 		}
 	}

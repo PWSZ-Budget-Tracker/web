@@ -50,10 +50,12 @@
 								<i class="fas fa-hand-holding-usd mr-2"></i>wydatki
 							</v-btn>
 						</router-link>
-						<v-btn x-large color="#9090ee" dark class="ml-1 mb-2 pr-8 pl-7 pt-10 pb-12">
-							<i class="far fa-calendar-alt mr-2"></i>
-							kalendarz
-						</v-btn>
+						<router-link to="/calendar">
+							<v-btn x-large color="#9090ee" dark class="ml-1 mb-2 pr-8 pl-7 pt-10 pb-12">
+								<i class="far fa-calendar-alt mr-2"></i>
+								kalendarz
+							</v-btn>
+						</router-link>
 					</v-col>
 				</v-row>
 			</v-col>
