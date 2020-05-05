@@ -66,12 +66,21 @@
 <script>
 import Chart from "@/components/Chart.vue";
 import Progressbar from "@/components/Progressbar.vue";
+import axios from "axios";
 
 export default {
 	name: "Logged",
 	components: {
 		Chart,
 		Progressbar
+	},
+	created() {
+		axios.post("/api/Income/GetAll", {});
+	},
+	beforeRouteEnter(to, from, next) {
+		if (localStorage.getItem("token")) {
+			next();
+		}
 	}
 };
 </script>

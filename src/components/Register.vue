@@ -39,13 +39,13 @@
 									label="Powtórz hasło"
 									type="password"
 									v-model="repeatPassword"
-									:rules="[rules.required, rules.minLenght, rules.repeatPassword]"
+									:rules="[rules.required, rules.minLenght, repeat.repeatPassword]"
 									color="#9090ee"
 									outlined
 								></v-text-field>
 								<v-alert
-									type="error"
-									:value="validationAlert"
+									:type="alertType"
+									:value="showAlert"
 									dark
 									border="top"
 									transition="scale-transition"
@@ -63,7 +63,7 @@
 								<p>
 									Masz konto?
 									<router-link to="/">
-										<v-btn text color="#3eb4a7">Zaloguj się{{valid}}</v-btn>
+										<v-btn text color="#3eb4a7">Zaloguj się</v-btn>
 									</router-link>
 								</p>
 							</div>
@@ -72,12 +72,6 @@
 				</v-card>
 			</v-col>
 		</v-row>
-		<div class="text-center ma-2">
-			<v-snackbar v-model="snackbar">
-				{{ text }}
-				<v-btn color="pink" text @click="snackbar = false">Close</v-btn>
-			</v-snackbar>
-		</div>
 	</v-container>
 </template>
 
@@ -85,7 +79,7 @@
 <script>
 /* eslint-disable */
 import rules from "@/components/validation/rules";
-import axios from "@/axios";
+import axios from "axios";
 
 export default {
 	data() {
@@ -93,11 +87,15 @@ export default {
 			password: "",
 			repeatPassword: "",
 			email: "",
-			validationAlert: false,
+			showAlert: false,
+			validationAlert: "",
 			valid: false,
+			alertType: "error",
 			rules,
-			snackbar: false,
-			text: "utworzono konto"
+			repeat: {
+				repeatPassword: value =>
+					value === this.password || "Hasło musi być takie same"
+			}
 		};
 	},
 	methods: {
@@ -105,6 +103,8 @@ export default {
 			if (!this.valid) {
 				event.preventDefault();
 				this.validationAlert = "Wprowadź lub popraw dane";
+				this.alertType = "error";
+				this.showAlert = true;
 			} else {
 				const credentials = {
 					email: this.email,
@@ -113,13 +113,30 @@ export default {
 				};
 				axios
 					.post("/api/Authentication/Register", credentials)
-					.then(res => {
-						console.log(res);
-						this.snackbar = true;
-						this.$router.push("/login");
+					.then(response => {
+						if (response.data.successful) {
+							console.log(response);
+							this.validationAlert =
+								"utworzono konto, zaloguj się";
+							this.alertType = "success";
+							this.showAlert = true;
+							this.email = "";
+							this.password = "";
+							this.repeatPassword = "";
+						} else {
+							this.validationAlert =
+								"użytkownik o podanym mailu już istnieje";
+							this.alertType = "error";
+							this.showAlert = true;
+						}
 					})
-					.catch(err => {});
+					.catch(error => {});
 			}
+		}
+	},
+	beforeRouteEnter(to, from, next) {
+		if (!localStorage.getItem("token")) {
+			next();
 		}
 	}
 };

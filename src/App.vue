@@ -1,6 +1,6 @@
 <template>
 	<v-app>
-		<app-header v-if="visible" :isLogged="isLogged"></app-header>
+		<app-header v-if="token != null" :isLogged="isLogged"></app-header>
 
 		<v-content>
 			<router-view></router-view>
@@ -17,15 +17,16 @@ export default {
 	name: "App",
 	data() {
 		return {
-			isLogged: true,
-			visible: true
+			isLogged: localStorage.getItem("token"),
+			visible: false
 		};
 	},
 	created() {
 		console.log(this.isLogged);
-		if (this.$route.path === "/" || this.$route.path === "/register") {
-			this.visible = false;
+		if (this.isLogged) {
+			this.visible = true;
 		}
+		this.$store.dispatch("setToken");
 	},
 	components: {
 		appHeader: Header,
@@ -33,6 +34,11 @@ export default {
 	},
 	methods: {
 		getResponse() {}
+	},
+	computed: {
+		token() {
+			return this.$store.getters.getToken;
+		}
 	}
 };
 </script>

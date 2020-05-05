@@ -36,7 +36,7 @@
 								></v-text-field>
 								<v-alert
 									type="error"
-									:value="validationAlert"
+									:value="showAlert"
 									dark
 									border="top"
 									transition="scale-transition"
@@ -70,14 +70,15 @@
 <script>
 /*eslint-disable*/
 import rules from "@/components/validation/rules";
-import axios from "@/axios";
+import axios from "axios";
 
 export default {
 	data() {
 		return {
 			password: "",
 			email: "",
-			validationAlert: false,
+			showAlert: false,
+			validationAlert: "",
 			valid: false,
 			rules
 		};
@@ -87,15 +88,40 @@ export default {
 			if (!this.valid) {
 				event.preventDefault();
 				this.validationAlert = "Wprowadź lub popraw dane";
+				this.showAlert = true;
 			} else {
 				axios
 					.post("/api/Authentication/Login", {
 						email: this.email,
 						password: this.password
 					})
-					.then(res => {})
-					.catch(err => {});
+					.then(response => {
+						if (response.data.successful) {
+							console.log(response);
+							localStorage.setItem(
+								"token",
+								response.data.payload.accessToken
+							);
+							this.$store.commit(
+								"setToken",
+								response.data.payload.accessToken
+							);
+							this.$router.push("/main");
+						} else {
+							this.validationAlert =
+								"taki użytkownik nie istnieje lub nieprawidłowe hasło";
+							this.showAlert = true;
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
 			}
+		}
+	},
+	beforeRouteEnter(to, from, next) {
+		if (!localStorage.getItem("token")) {
+			next();
 		}
 	}
 };

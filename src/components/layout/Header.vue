@@ -27,7 +27,7 @@
 
 						<v-list>
 							<v-list-item @click="() => {}">
-								<v-list-item-title>wyloguj</v-list-item-title>
+								<v-list-item-title @click="signOut">wyloguj</v-list-item-title>
 							</v-list-item>
 						</v-list>
 					</v-menu>
@@ -44,6 +44,11 @@ export default {
 			if (this.$route.path !== "/main") {
 				this.$router.push("/main");
 			}
+		},
+		signOut() {
+			localStorage.removeItem("token");
+			this.$store.commit("setToken", null);
+			this.$router.push("/login");
 		}
 	},
 	data() {
