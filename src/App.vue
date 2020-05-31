@@ -22,7 +22,6 @@ export default {
 		};
 	},
 	created() {
-		console.log(this.isLogged);
 		if (this.isLogged) {
 			this.visible = true;
 		}

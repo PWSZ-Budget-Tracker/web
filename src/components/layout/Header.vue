@@ -16,7 +16,7 @@
 								</v-btn>
 							</v-badge>
 						</template>
-						<v-card>powiadomienie</v-card>
+						<v-card v-if="getNotifications != null">{{getNotifications.message}}</v-card>
 					</v-menu>
 					<v-menu left bottom>
 						<template v-slot:activator="{ on }">
@@ -39,6 +39,9 @@
 
 <script>
 export default {
+	data() {
+		return {};
+	},
 	methods: {
 		redirect() {
 			if (this.$route.path !== "/main") {
@@ -51,10 +54,18 @@ export default {
 			this.$router.push("/login");
 		}
 	},
-	data() {
-		return {
-			messages: 0
-		};
+	computed: {
+		getNotifications() {
+			return this.$store.getters.getNotifications;
+		},
+
+		messages() {
+			let messages = 0;
+			if (this.getNotifications != null) {
+				messages = 1;
+			}
+			return messages;
+		}
 	}
 };
 </script>

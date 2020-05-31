@@ -27,7 +27,7 @@
 									label="Hasło"
 									type="password"
 									v-model="password"
-									:rules="[rules.required, rules.minLenght]"
+									:rules="[rules.required, rules.minLenght, rules.passwordRegister]"
 									color="#9090ee"
 									outlined
 								></v-text-field>
@@ -62,7 +62,7 @@
 							<div class="my-2">
 								<p>
 									Masz konto?
-									<router-link to="/">
+									<router-link to="/login">
 										<v-btn text color="#3eb4a7">Zaloguj się</v-btn>
 									</router-link>
 								</p>

@@ -1,26 +1,23 @@
 <template>
 	<div>
 		<chartjs-doughnut v-bind:datasets="datasets" v-bind:option="option" v-bind:labels="labels"></chartjs-doughnut>
+		<ImgSmile v-if="datasets[0].data.length == 0" />
 	</div>
 </template>
 
 
 <script>
+import ImgSmile from "@/components/ImgSmile.vue";
+
 export default {
 	data() {
 		return {
-			labels: [
-				"transport",
-				"zakupy",
-				"prezenty",
-				"siłownia",
-				"studia",
-				"jedzenie"
-			],
+			labels: [],
 			datasets: [
 				{
-					data: [20, 30, 50, 15, 2, 67],
-					backgroundColor: [
+					data: [],
+					backgroundColor: [],
+					colors: [
 						"#3eb4a7",
 						"#468982",
 						"#457689",
@@ -42,6 +39,32 @@ export default {
 				}
 			}
 		};
+	},
+	components: {
+		ImgSmile
+	},
+	computed: {
+		expenses() {
+			return this.$store.getters.getExpenses;
+		}
+	},
+	created() {
+		let helper = 0;
+		for (let i = 0; i < this.expenses.length; i++) {
+			this.labels.push(this.expenses[i].name);
+			this.datasets[0].data.push(this.expenses[i].amount);
+			if (helper === 11) {
+				this.datasets[0].backgroundColor.push(
+					this.datasets[0].colors[0]
+				);
+				helper = 0;
+			} else {
+				this.datasets[0].backgroundColor.push(
+					this.datasets[0].colors[helper]
+				);
+				helper++;
+			}
+		}
 	}
 };
 </script>

@@ -143,6 +143,12 @@ export default {
 				timeZone: "UTC",
 				month: "long"
 			});
+		},
+		incomes() {
+			return this.$store.getters.getIncomes;
+		},
+		expenses() {
+			return this.$store.getters.getExpenses;
 		}
 	},
 	mounted() {
@@ -151,8 +157,25 @@ export default {
 	created() {
 		this.events.push(
 			{ name: "nic", start: "2020-4-29", color: "yellow" },
-			{ name: "fajnie", start: "2020-04-28", color: "blue" }
+			{ name: "fajnie", start: "2020-04-28 16:38", color: "blue" }
 		);
+
+		for (let i = 0; i < this.incomes.length; i++) {
+			let event = {
+				name: this.incomes[i].name,
+				start: this.incomes[i].date,
+				color: "teal"
+			};
+			this.events.push(event);
+		}
+		for (let i = 0; i < this.expenses.length; i++) {
+			let event = {
+				name: this.expenses[i].name,
+				start: this.expenses[i].date,
+				color: "red"
+			};
+			this.events.push(event);
+		}
 	},
 
 	methods: {
@@ -211,3 +234,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+.v-calendar-daily__body {
+	display: none !important;
+}
+</style>

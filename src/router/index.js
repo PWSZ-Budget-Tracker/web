@@ -1,19 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
 import About from '../views/About.vue';
 import Logged from '../views/Logged.vue';
 import Register from '../components/Register.vue';
 import Login from '../components/Login.vue';
-import Table from '../components/Table.vue';
+import Economics from '../components/Economics.vue';
+import Goal from '../components/Goal.vue';
 import Calendar from '../components/Calendar.vue';
 
 Vue.use(VueRouter);
 
 const routes = [{
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Logged',
+    component: Logged
   },
   {
     path: '/about',
@@ -23,17 +23,17 @@ const routes = [{
   {
     path: '/expenses',
     name: 'Expenses',
-    component: Table
+    component: Economics
   },
   {
     path: '/goal',
     name: 'Goal',
-    component: Table
+    component: Goal
   },
   {
     path: '/income',
     name: 'Income',
-    component: Table
+    component: Economics
   },
   {
     path: '/calendar',

@@ -3,7 +3,9 @@
 		<v-row>
 			<v-col md="6">
 				<h1 class="text-center mt-10">Wydatki</h1>
-				<h2 class="text-center teal--text text--accent-4 font-italic font-weight-light">1 500 zł</h2>
+				<h2
+					class="text-center teal--text text--accent-4 font-italic font-weight-light"
+				>{{getSumOfExpenses()}} zł</h2>
 				<v-divider class="mb-10 ml-10"></v-divider>
 				<Chart></Chart>
 			</v-col>
@@ -13,22 +15,25 @@
 					<v-col md="6">
 						<div class="ml-5 mt-9">
 							<h3>budżet</h3>
-							<Progressbar></Progressbar>
+							<Progressbar :left="left" :sumOfIncomes="getSumOfIncomes()"></Progressbar>
 						</div>
 					</v-col>
 					<v-col md="6">
 						<h3 class="text-right mt-8">pozostało</h3>
-						<h4 class="text-right teal--text text--accent-4 font-italic font-weight-light">350 zł</h4>
+						<h4 class="text-right teal--text text--accent-4 font-italic font-weight-light">{{left}} zł</h4>
 					</v-col>
 				</v-row>
 				<v-divider class="mb-10"></v-divider>
 				<v-row>
 					<v-col md="12">
 						<div class="ml-5">
-							<h1>Przychody:</h1>
-							<h6 class="mt-8 text-left">Praca: 1700</h6>
-							<h6 class="text-left">Stypendium: 150</h6>
-							<h6 class="text-left teal--text text--accent-4">Suma: 1850</h6>
+							<h1 class="mb-5">Przychody:</h1>
+							<h6
+								class="text-left"
+								v-for="(income, i) in incomes"
+								:key="i"
+							>{{income.name}}: {{income.amount}}</h6>
+							<h6 class="text-left teal--text text--accent-4">Suma: {{getSumOfIncomes()}}</h6>
 						</div>
 					</v-col>
 				</v-row>
@@ -76,10 +81,39 @@ export default {
 	},
 	created() {
 		axios.post("/api/Income/GetAll", {});
+		// this.$store.dispatch("setIncomeData");
+		this.$store.dispatch("fetchExpenses");
 	},
 	beforeRouteEnter(to, from, next) {
 		if (localStorage.getItem("token")) {
 			next();
+		}
+	},
+	methods: {
+		getSumOfIncomes() {
+			let sum = 0;
+			for (let i = 0; i < this.incomes.length; i++) {
+				sum += Number(this.incomes[i].amount);
+			}
+			return sum;
+		},
+		getSumOfExpenses() {
+			let sum = 0;
+			for (let i = 0; i < this.expenses.length; i++) {
+				sum += Number(this.expenses[i].amount);
+			}
+			return sum;
+		}
+	},
+	computed: {
+		incomes() {
+			return this.$store.getters.getIncomes;
+		},
+		expenses() {
+			return this.$store.getters.getExpenses;
+		},
+		left() {
+			return this.getSumOfIncomes() - this.getSumOfExpenses();
 		}
 	}
 };

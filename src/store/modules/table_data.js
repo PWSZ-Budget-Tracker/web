@@ -1,16 +1,16 @@
+import axios from 'axios';
+
 const state = {
-	savingsData: null,
-	incomeData: null,
-	goalData: null,
-	expensesData: null
+
+	incomeData: [],
+	goalData: [],
+	expensesData: []
 
 };
 
 const mutations = {
-	// eslint-disable-next-line no-shadow
-	setTableData(state, tableData) {
-		state.tableData = tableData;
-	},
+
+
 	// eslint-disable-next-line no-shadow
 	setExpensesData(state, expensesData) {
 		state.expensesData = expensesData;
@@ -26,13 +26,9 @@ const mutations = {
 };
 
 const actions = {
-	setSavingsData({
-		commit
-	}) {
-		const savingsData = [];
-
-
-		commit('setSavingsData', savingsData);
+	addExpenses(
+		context, expenses) {
+		axios.post('/api/Expenses/Add', expenses);
 	},
 	setIncomeData({
 		commit
@@ -49,47 +45,7 @@ const actions = {
 	setExpensesData({
 		commit
 	}) {
-		const expensesData = [{
-				name: "Transport",
-				amount: 159
-			},
-			{
-				name: "Jedzenie",
-				amount: 237
-			},
-			{
-				name: "Studia",
-				amount: 262
-			},
-			{
-				name: "Restauracja",
-				amount: 305
-			},
-			{
-				name: "Zakupy",
-				amount: 356
-			},
-			{
-				name: "Urodziny",
-				amount: 375
-			},
-			{
-				name: "Lekarstwa",
-				amount: 392
-			},
-			{
-				name: "Tesco",
-				amount: 408
-			},
-			{
-				name: "Wyjazd",
-				amount: 452
-			},
-			{
-				name: "Działka",
-				amount: 518
-			}
-		];
+		const expensesData = [];
 		commit('setExpensesData', expensesData);
 	}
 };
@@ -97,7 +53,6 @@ const actions = {
 const getters = {
 	// eslint-disable-next-line no-shadow
 	getTableData: (state) => (path) => {
-		console.log(path);
 		let tableData = [];
 		if (path === '/expenses') {
 			tableData = state.expensesData;
@@ -107,6 +62,18 @@ const getters = {
 			tableData = state.goalData;
 		}
 		return tableData;
+	},
+	// eslint-disable-next-line no-shadow
+	getIncomes(state) {
+		return state.incomeData;
+	},
+	// eslint-disable-next-line no-shadow
+	getExpenses(state) {
+		return state.expensesData;
+	},
+	// eslint-disable-next-line no-shadow
+	getGoals(state) {
+		return state.goalData;
 	}
 };
 

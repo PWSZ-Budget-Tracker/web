@@ -1,21 +1,31 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import tableData from '@/store/modules/table_data';
+import categories from '@/store/modules/categories';
+import expenses from '@/store/modules/expenses';
+import incomes from '@/store/modules/incomes';
+import goal from '@/store/modules/goal';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: null
+    token: null,
+    notifications: null
   },
   mutations: {
     setToken(state, token) {
       state.token = token;
+    },
+    setNotifications(state, notifications) {
+      state.notifications = notifications;
     }
   },
   getters: {
     getToken(state) {
       return state.token;
+    },
+    getNotifications(state) {
+      return state.notifications;
     }
   },
   actions: {
@@ -29,6 +39,9 @@ export default new Vuex.Store({
   },
   modules: {
 
-    tableData
+    categories,
+    expenses,
+    incomes,
+    goal
   }
 });
