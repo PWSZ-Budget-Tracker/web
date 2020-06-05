@@ -10,7 +10,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: null,
-    notifications: null
+    notifications: {
+      budgetPLN: null,
+      budgetUSD: null,
+      budgetEUR: null
+    }
   },
   mutations: {
     setToken(state, token) {

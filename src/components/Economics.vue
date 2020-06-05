@@ -37,7 +37,7 @@
 					<div class="ml-2">
 						<v-dialog :retain-focus="false" v-model="editCategoryDialog" max-width="500px">
 							<template v-slot:activator="{ on }">
-								<v-icon v-on="on" small class="mr-2" @click="openEditCategoryDialog(category)">mdi-pencil</v-icon>
+								<v-icon v-if="!category.isDefault" v-on="on" small class="mr-2" @click="openEditCategoryDialog(category)">mdi-pencil</v-icon>
 							</template>
 							<v-card>
 								<v-card-title>
@@ -55,11 +55,11 @@
 								<v-card-actions>
 									<v-spacer></v-spacer>
 									<v-btn color="#3eb4a7" text @click="closeEditCategoryDialog">anuluj</v-btn>
-									<v-btn color="#3eb4a7" text @click="editCategory(category)">zapisz</v-btn>
+									<v-btn color="#3eb4a7" text @click="editCategory">zapisz</v-btn>
 								</v-card-actions>
 							</v-card>
 						</v-dialog>
-						<v-icon small @click="deleteCategory(category)">mdi-delete</v-icon>
+						<v-icon v-if="!category.isDefault" small @click="deleteCategory(category)">mdi-delete</v-icon>
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
@@ -79,6 +79,7 @@
 			categoryDialog: false,
 			editCategoryDialog: false,
 			categoryName: "",
+			editedIndex: -1,
 			title: ""
 		}),
 		components: {
@@ -112,55 +113,38 @@
 				this.categoryName = category.name;
 				this.editedIndex = category.id;
 			},
-			editCategory(category) {
+			editCategory() {
 				axios
-				.post("/api/Category/Edit", {
-					categoryId: category.id,
+				.put("/api/Category/Edit", {
+					categoryId: this.editedIndex,
 					name: this.categoryName
 				})
 				// eslint-disable-next-line arrow-parens
-				.then(response => {
+				.then(() => {
 					this.categoryName = "";
 					this.editCategoryDialog = false;
 					this.$store.dispatch("fetchCategories");
-					console.log(response);
-				})
-				// eslint-disable-next-line arrow-parens
-				.catch(error => {
-					console.log(error);
 				});
 			},
 			deleteCategory(category) {
 			// eslint-disable-next-line no-restricted-globals
 			if (confirm(`Czy na pewno usunąć kategorię ${category.name}?`)) {
-				axios
-				.post("/api/Category/Delete", {
-					categoryId: category.id
-				})
-					// eslint-disable-next-line arrow-parens
-					.then(response => {
-						this.$store.dispatch("fetchCategories");
-						console.log(response);
-					});
-				}
-			},
-			categorySave() {
-				axios
-				.post("/api/Category/Add", {
-					name: this.categoryName,
-					type: this.$route.path === "/expenses" ? 1 : 0
-				})
+				axios.delete("/api/Category/Delete", { data: { categoryId: category.id }, headers: { 'Content-Type': 'application/json' } }).then(() => {
+					this.$store.dispatch("fetchCategories");
+				});
+			}
+		},
+		categorySave() {
+			axios
+			.post("/api/Category/Add", {
+				name: this.categoryName,
+				type: this.$route.path === "/expenses" ? 0 : 1
+			})
 				// eslint-disable-next-line arrow-parens
-				.then(response => {
-					console.log(response);
+				.then(() => {
 					this.$store.dispatch("fetchCategories");
 					this.categoryName = "";
 					this.categoryDialog = false;
-					console.log(response);
-				})
-				// eslint-disable-next-line arrow-parens
-				.catch(error => {
-					console.log(error);
 				});
 			}
 

@@ -1,14 +1,17 @@
 <template>
 	<div>
-		<chartjs-doughnut v-bind:datasets="datasets" v-bind:option="option" v-bind:labels="labels"></chartjs-doughnut>
-		<ImgSmile v-if="datasets[0].data.length == 0" />
+		<chartjs-doughnut
+			v-if="expenses.length != 0"
+			v-bind:datasets="datasets"
+			v-bind:option="option"
+			v-bind:labels="labels"
+		></chartjs-doughnut>
+		<h1 class="text-center" v-else>Brak Wydatków</h1>
 	</div>
 </template>
 
 
 <script>
-import ImgSmile from "@/components/ImgSmile.vue";
-
 export default {
 	data() {
 		return {
@@ -40,9 +43,6 @@ export default {
 			}
 		};
 	},
-	components: {
-		ImgSmile
-	},
 	computed: {
 		expenses() {
 			return this.$store.getters.getExpenses;
@@ -51,7 +51,9 @@ export default {
 	created() {
 		let helper = 0;
 		for (let i = 0; i < this.expenses.length; i++) {
-			this.labels.push(this.expenses[i].name);
+			this.labels.push(
+				`${this.expenses[i].categoryName} (${this.expenses[i].currency.shortName})`
+			);
 			this.datasets[0].data.push(this.expenses[i].amount);
 			if (helper === 11) {
 				this.datasets[0].backgroundColor.push(

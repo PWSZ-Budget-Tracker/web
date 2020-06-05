@@ -5,10 +5,10 @@
 				<v-sheet height="64">
 					<v-toolbar flat color="white">
 						<v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">Dziś</v-btn>
-						<v-btn fab text small color="grey darken-2" @click="prev">
+						<v-btn fab text small color="grey darken-2" @click.native="prev">
 							<v-icon small>mdi-chevron-left</v-icon>
 						</v-btn>
-						<v-btn fab text small color="grey darken-2" @click="next">
+						<v-btn fab text small color="grey darken-2" @click.native="next">
 							<v-icon small>mdi-chevron-right</v-icon>
 						</v-btn>
 						<v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -88,7 +88,6 @@ export default {
 		selectedEvent: {},
 		selectedElement: null,
 		selectedOpen: false,
-		events: [],
 		colors: [
 			"blue",
 			"indigo",
@@ -149,33 +148,46 @@ export default {
 		},
 		expenses() {
 			return this.$store.getters.getExpenses;
+		},
+		events() {
+			let events = [];
+			for (let i = 0; i < this.incomes.length; i++) {
+				let date = new Date(this.incomes[i].timeStamp);
+				let event = {
+					name: `${this.incomes[i].amount} ${this.incomes[i].currency.shortName} - ${this.incomes[i].categoryName}`,
+					start:
+						date.getFullYear() +
+						"-" +
+						(date.getMonth() + 1) +
+						"-" +
+						date.getDate(),
+					color: "teal"
+				};
+				events.push(event);
+			}
+			for (let i = 0; i < this.expenses.length; i++) {
+				let date = new Date(this.expenses[i].timeStamp);
+				let event = {
+					name: `${this.expenses[i].amount} ${this.expenses[i].currency.shortName} - ${this.expenses[i].categoryName}`,
+					start:
+						date.getFullYear() +
+						"-" +
+						(date.getMonth() + 1) +
+						"-" +
+						date.getDate(),
+					color: "red"
+				};
+				events.push(event);
+			}
+			return events;
 		}
 	},
 	mounted() {
 		this.$refs.calendar.checkChange();
 	},
 	created() {
-		this.events.push(
-			{ name: "nic", start: "2020-4-29", color: "yellow" },
-			{ name: "fajnie", start: "2020-04-28 16:38", color: "blue" }
-		);
-
-		for (let i = 0; i < this.incomes.length; i++) {
-			let event = {
-				name: this.incomes[i].name,
-				start: this.incomes[i].date,
-				color: "teal"
-			};
-			this.events.push(event);
-		}
-		for (let i = 0; i < this.expenses.length; i++) {
-			let event = {
-				name: this.expenses[i].name,
-				start: this.expenses[i].date,
-				color: "red"
-			};
-			this.events.push(event);
-		}
+		this.$store.dispatch("fetchIncomes");
+		this.$store.dispatch("fetchExpenses");
 	},
 
 	methods: {
@@ -235,7 +247,7 @@ export default {
 };
 </script>
 
-<style scoped>
+	<style scoped>
 .v-calendar-daily__body {
 	display: none !important;
 }

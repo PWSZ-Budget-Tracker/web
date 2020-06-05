@@ -24,10 +24,8 @@ const actions = {
 	fetchCategories({
 		commit
 	}) {
-		axios.post('/api/Category/GetAll', {
-			type: router.history.current.path === '/expenses' ? 1 : 0
-			// eslint-disable-next-line arrow-parens
-		}).then(response => {
+		const type = router.history.current.path === '/expenses' ? 0 : 1;
+		axios.get(`/api/Category/GetAll?type=${type}`).then((response) => {
 			commit('setCategories', response.data.payload);
 		});
 	}

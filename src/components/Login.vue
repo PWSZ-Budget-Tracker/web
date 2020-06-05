@@ -97,7 +97,6 @@ export default {
 					})
 					.then(response => {
 						if (response.data.successful) {
-							console.log(response);
 							localStorage.setItem(
 								"token",
 								response.data.payload.accessToken
@@ -112,9 +111,6 @@ export default {
 								"taki użytkownik nie istnieje lub nieprawidłowe hasło";
 							this.showAlert = true;
 						}
-					})
-					.catch(error => {
-						console.log(error);
 					});
 			}
 		}

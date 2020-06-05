@@ -1,49 +1,61 @@
 <template>
-	<div>
-		<div class="loading-bar">
-			<div class="percentage" :style="{'width' : percentage + '%'}"></div>
-		</div>
+	<div class="loading-bar">
+		<div class="percentage" :style="{'width' : percentage + '%'}"></div>
 	</div>
 </template>
 
 <script>
 export default {
-	props: ["sumOfIncomes", "left"],
+	props: ["sum", "budgetRest", "currency"],
 	data: () => ({}),
 	computed: {
 		percentage() {
-			return 100 - (this.left / this.sumOfIncomes) * 100;
+			return 100 - (this.budgetRest / this.sum) * 100;
+		},
+		notifications() {
+			return this.$store.getters.getNotifications;
 		}
 	},
 	watch: {
 		percentage() {
-			if (this.percentage >= 80) {
-				this.$store.commit("setNotifications", {
-					message: "Twój budżet się kończy"
-				});
-			} else {
-				this.$store.commit("setNotifications", null);
-			}
-			if (this.percentage >= 100) {
-				this.$store.commit("setNotifications", {
-					message: "Twój budżet się skończył"
-				});
-			}
+			this.setNotifications();
+		}
+	},
+	methods: {
+		setAlertNotifications(currency) {
+			if (currency === "PLN")
+				this.notifications.budgetPLN = "Twój budżet (PLN) się kończy!";
+			else if (currency === "USD")
+				this.notifications.budgetUSD = "Twój budżet (USD) się kończy!";
+			else this.notifications.budgetEUR = "Twój budżet (EUR) się kończy!";
+		},
+		setFinalNotifications(currency) {
+			if (currency === "PLN")
+				this.notifications.budgetPLN =
+					"Twój budżet (PLN) się skończył!";
+			else if (currency === "USD")
+				this.notifications.budgetUSD =
+					"Twój budżet (USD) się skończył!";
+			else
+				this.notifications.budgetEUR =
+					"Twój budżet (EUR) się skończył!";
+		},
+		setNotificationsToNull(currency) {
+			if (currency === "PLN") this.notifications.budgetPLN = null;
+			else if (currency === "USD") this.notifications.budgetUSD = null;
+			else this.notifications.budgetEUR = null;
+		},
+		setNotifications() {
+			if (this.percentage >= 80)
+				this.setAlertNotifications(this.currency);
+			else this.setNotificationsToNull(this.currency);
+			if (this.percentage >= 100)
+				this.setFinalNotifications(this.currency);
+			this.$store.commit("setNotifications", this.notifications);
 		}
 	},
 	created() {
-		if (this.percentage >= 80) {
-			this.$store.commit("setNotifications", {
-				message: "Twój budżet się kończy"
-			});
-		} else {
-			this.$store.commit("setNotifications", null);
-		}
-		if (this.percentage >= 100) {
-			this.$store.commit("setNotifications", {
-				message: "Twój budżet się skończył"
-			});
-		}
+		this.setNotifications();
 	}
 };
 </script>
@@ -51,7 +63,7 @@ export default {
 <style lang="scss" scoped>
 .loading-bar {
 	position: relative;
-	width: 400px;
+	width: 300px;
 	height: 30px;
 	border-radius: 15px;
 	overflow: hidden;

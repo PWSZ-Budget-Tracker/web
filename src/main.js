@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue';
 import axios from "axios";
 import VueAxios from 'vue-axios';
@@ -21,11 +22,21 @@ Vue.axios.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     config.headers['Access-Control-Allow-Origin'] = '*';
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+const ignoreWarnMessage = 'The .native modifier for v-on is only valid on components but it was used on <div>.';
+Vue.config.warnHandler = (msg, vm, trace) => {
+  if (msg === ignoreWarnMessage) {
+    msg = null;
+    vm = null;
+    trace = null;
+  }
+};
 
 new Vue({
   router,

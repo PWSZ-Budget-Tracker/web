@@ -16,12 +16,7 @@ const actions = {
 		// eslint-disable-next-line no-unused-vars
 		commit
 	}) {
-		console.log(new Date());
-		axios.post('/api/Incomes/GetAll', {
-			date: new Date()
-			// eslint-disable-next-line arrow-parens
-		}).then(response => {
-			console.log(response);
+		axios.get(`/api/Income/GetAll?date=${new Date().toISOString()}`).then((response) => {
 			commit('setIncomes', response.data.payload);
 		});
 	}
