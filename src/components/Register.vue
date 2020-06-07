@@ -122,7 +122,7 @@ export default {
 							this.email = "";
 							this.password = "";
 							this.repeatPassword = "";
-							this.$router.push("/login");
+							this.$router.push('/login');
 						} else {
 							this.validationAlert =
 								"użytkownik o podanym mailu już istnieje";

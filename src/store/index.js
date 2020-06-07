@@ -4,6 +4,7 @@ import categories from '@/store/modules/categories';
 import expenses from '@/store/modules/expenses';
 import incomes from '@/store/modules/incomes';
 import goal from '@/store/modules/goal';
+import budgetPercentage from '@/store/modules/budgetPercentage';
 
 Vue.use(Vuex);
 
@@ -46,6 +47,7 @@ export default new Vuex.Store({
     categories,
     expenses,
     incomes,
-    goal
+    goal,
+    budgetPercentage
   }
 });
