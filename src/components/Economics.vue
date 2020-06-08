@@ -37,7 +37,13 @@
 					<div class="ml-2">
 						<v-dialog :retain-focus="false" v-model="editCategoryDialog" max-width="500px">
 							<template v-slot:activator="{ on }">
-								<v-icon v-if="!category.isDefault" v-on="on" small class="mr-2" @click="openEditCategoryDialog(category)">mdi-pencil</v-icon>
+								<v-icon
+									v-if="!category.isDefault"
+									v-on="on"
+									small
+									class="mr-2"
+									@click="openEditCategoryDialog(category)"
+								>mdi-pencil</v-icon>
 							</template>
 							<v-card>
 								<v-card-title>
@@ -71,50 +77,51 @@
 </template>
 
 <script>
-	import axios from "axios";
-	import Table from "@/components/Table.vue";
+import axios from "axios";
+import Table from "@/components/Table.vue";
 
-	export default {
-		data: () => ({
-			categoryDialog: false,
-			editCategoryDialog: false,
-			categoryName: "",
-			editedIndex: -1,
-			title: ""
-		}),
-		components: {
-			Table
+export default {
+	data: () => ({
+		categoryDialog: false,
+		editCategoryDialog: false,
+		categoryName: "",
+		editedIndex: -1,
+		title: ""
+	}),
+	components: {
+		Table
+	},
+
+	computed: {
+		categories() {
+			return this.$store.getters.getCategories;
+		}
+	},
+
+	created() {
+		this.title = this.$route.path === "/expenses" ? "Wydatki" : "Przychody";
+		this.$store.dispatch("fetchCategories");
+		if (this.$route.path === "/expenses")
+			this.$store.dispatch("fetchExpenses");
+		else this.$store.dispatch("fetchIncomes");
+	},
+
+	methods: {
+		closeEditCategoryDialog() {
+			this.editCategoryDialog = false;
+			this.categoryName = "";
+			this.editedIndex = -1;
 		},
-
-		computed: {
-			categories() {
-				return this.$store.getters.getCategories;
-			}
+		categoryClose() {
+			this.categoryDialog = false;
+			this.editedIndex = -1;
 		},
-
-
-		created() {
-			this.title = this.$route.path === "/expenses" ? "Wydatki" : "Przychody";
-			this.$store.dispatch("fetchCategories");
-			if (this.$route.path === '/expenses') this.$store.dispatch("fetchExpenses"); else this.$store.dispatch("fetchIncomes");
+		openEditCategoryDialog(category) {
+			this.categoryName = category.name;
+			this.editedIndex = category.id;
 		},
-
-		methods: {
-			closeEditCategoryDialog() {
-				this.editCategoryDialog = false;
-				this.categoryName = "";
-				this.editedIndex = -1;
-			},
-			categoryClose() {
-				this.categoryDialog = false;
-				this.editedIndex = -1;
-			},
-			openEditCategoryDialog(category) {
-				this.categoryName = category.name;
-				this.editedIndex = category.id;
-			},
-			editCategory() {
-				axios
+		editCategory() {
+			axios
 				.put("/api/Category/Edit", {
 					categoryId: this.editedIndex,
 					name: this.categoryName
@@ -125,35 +132,37 @@
 					this.editCategoryDialog = false;
 					this.$store.dispatch("fetchCategories");
 				});
-			},
-			deleteCategory(category) {
+		},
+		deleteCategory(category) {
 			// eslint-disable-next-line no-restricted-globals
 			if (confirm(`Czy na pewno usunąć kategorię ${category.name}?`)) {
-				axios.delete("/api/Category/Delete", { data: { categoryId: category.id }, headers: { 'Content-Type': 'application/json' } }).then(() => {
-					this.$store.dispatch("fetchCategories");
-				});
+				axios
+					.delete("/api/Category/Delete", {
+						data: { categoryId: category.id },
+						headers: { "Content-Type": "application/json" }
+					})
+					.then(() => {
+						this.$store.dispatch("fetchCategories");
+					});
 			}
 		},
 		categorySave() {
 			axios
-			.post("/api/Category/Add", {
-				name: this.categoryName,
-				type: this.$route.path === "/expenses" ? 0 : 1
-			})
+				.post("/api/Category/Add", {
+					name: this.categoryName,
+					type: this.$route.path === "/expenses" ? 0 : 1
+				})
 				// eslint-disable-next-line arrow-parens
 				.then(() => {
 					this.$store.dispatch("fetchCategories");
 					this.categoryName = "";
 					this.categoryDialog = false;
 				});
-			}
-
-		},
-		beforeRouteEnter(to, from, next) {
-			if (localStorage.getItem("token")) next();
-			else next('/login');
 		}
-
-
-	};
+	},
+	beforeRouteEnter(to, from, next) {
+		if (localStorage.getItem("token")) next();
+		else next("/about");
+	}
+};
 </script>

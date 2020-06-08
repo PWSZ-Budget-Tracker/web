@@ -1,8 +1,8 @@
 <template>
 	<v-container>
-		<v-row align="center" justify="center" class="mt-12">
+		<v-row align="center" justify="center" style="margin-top: 200px; margin-bottom: 200px;">
 			<div class="col-md-6 col-lg-5 col-xl-3 d-none d-md-block mr-10">
-				<img alt="Vue logo" src="../assets/logo.png" />
+				<Logo />
 			</div>
 			<v-divider inset vertical></v-divider>
 			<v-col md="5" justify="end">
@@ -71,6 +71,7 @@
 /*eslint-disable*/
 import rules from "@/components/validation/rules";
 import axios from "axios";
+import Logo from "@/components/Logo.vue";
 
 export default {
 	data() {
@@ -82,6 +83,9 @@ export default {
 			valid: false,
 			rules
 		};
+	},
+	components: {
+		Logo
 	},
 	methods: {
 		submitValidate(event) {
